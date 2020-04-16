@@ -1,1 +1,1 @@
-web: ./build/install/vollstapel/bin/vollstapel
+web: ./build/install/shoppinglist/bin/shoppinglist
