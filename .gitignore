@@ -1,0 +1,6 @@
+# Project exclude paths
+/.gradle/
+/build/
+/build/classes/kotlin/jvm/main/
+/build/js/packages/vollstapel/kotlin/
+/.idea/
