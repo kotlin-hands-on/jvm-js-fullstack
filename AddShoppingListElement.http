@@ -1,0 +1,7 @@
+POST http://localhost:9090/shoppingList
+Content-Type: application/json
+
+{
+  "desc": "Peppers 🌶",
+  "priority": 5
+}
