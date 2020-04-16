@@ -48,17 +48,19 @@ fun main() {
             static("/") {
                 resources("")
             }
-            get(ShoppingListItem.path) {
-                call.respond(collection.find().toList())
-            }
-            post(ShoppingListItem.path) {
-                collection.insertOne(call.receive<ShoppingListItem>())
-                call.respond(HttpStatusCode.OK)
-            }
-            delete(ShoppingListItem.path + "/{id}") {
-                val id = call.parameters["id"]?.toInt() ?: error("Invalid delete request")
-                collection.deleteOne(ShoppingListItem::id eq id)
-                call.respond(HttpStatusCode.OK)
+            route(ShoppingListItem.path) {
+                get {
+                    call.respond(collection.find().toList())
+                }
+                post {
+                    collection.insertOne(call.receive<ShoppingListItem>())
+                    call.respond(HttpStatusCode.OK)
+                }
+                delete("/{id}") {
+                    val id = call.parameters["id"]?.toInt() ?: error("Invalid delete request")
+                    collection.deleteOne(ShoppingListItem::id eq id)
+                    call.respond(HttpStatusCode.OK)
+                }
             }
         }
     }.start(wait = true)
