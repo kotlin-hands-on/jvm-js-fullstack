@@ -33,7 +33,7 @@ val App = functionalComponent<RProps> { _ ->
         }
     }
     child(
-        functionalComponent = InputComponent,
+        InputComponent,
         props = jsObject {
             onSubmit = { input ->
                 val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
