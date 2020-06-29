@@ -4,6 +4,6 @@ import kotlinx.browser.document
 
 fun main() {
     render(document.getElementById("root")) {
-        child(functionalComponent = App)
+        child(App)
     }
 }
