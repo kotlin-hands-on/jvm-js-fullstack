@@ -9,16 +9,15 @@ import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.litote.kmongo.*
-import org.litote.kmongo.async.*
 import org.litote.kmongo.coroutine.*
-import org.litote.kmongo.async.getCollection
 import com.mongodb.ConnectionString
+import org.litote.kmongo.reactivestreams.KMongo
 
 val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
     ConnectionString("$it?retryWrites=false")
 }
 
-val client = if (connectionString != null) KMongo.createClient(connectionString) else KMongo.createClient()
+val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
 val database = client.getDatabase(connectionString?.database ?: "test")
 val collection = database.getCollection<ShoppingListItem>()
 
