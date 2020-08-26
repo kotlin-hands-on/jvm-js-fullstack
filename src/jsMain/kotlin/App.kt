@@ -4,7 +4,7 @@ import kotlinext.js.*
 import kotlinx.html.js.*
 import kotlinx.coroutines.*
 
-val scope = MainScope()
+private val scope = MainScope()
 
 val App = functionalComponent<RProps> { _ ->
     val (shoppingList, setShoppingList) = useState(emptyList<ShoppingListItem>())
