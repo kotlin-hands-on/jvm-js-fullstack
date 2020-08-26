@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.3.71"
-val serializationVersion = "0.20.0"
-val ktorVersion = "1.3.2"
+val kotlinVersion = "1.4.0"
+val serializationVersion = "1.0.0-RC"
+val ktorVersion = "1.4.0"
 
 plugins {
-    kotlin("multiplatform") version "1.3.71"
+    kotlin("multiplatform") version "1.4.0"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.3.70"
+    kotlin("plugin.serialization") version "1.4.0"
 }
 
 group = "org.example"
@@ -21,7 +21,7 @@ repositories {
 }
 
 kotlin {
-    /* Targets configuration omitted. 
+    /* Targets configuration omitted.
     *  To find out how to configure the targets, please follow the link:
     *  https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#setting-up-targets */
 
@@ -29,18 +29,13 @@ kotlin {
         withJava()
     }
     js {
-        browser {
-            dceTask {
-                keep("ktor-ktor-io.\$\$importsForInline\$\$.ktor-ktor-io.io.ktor.utils.io")
-            }
-        }
+        browser()
     }
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("io.ktor:ktor-serialization:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
@@ -53,41 +48,27 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
+                implementation("io.ktor:ktor-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-server-core:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:1.2.3")
-                implementation(kotlin("stdlib", kotlinVersion)) // or "stdlib-jdk8"
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion") // JVM dependency
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
-
-                implementation("org.litote.kmongo:kmongo-coroutine-serialization:3.12.2")
+                implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.1.1")
             }
         }
 
         val jsMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-js"))
-
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serializationVersion")
-                //todo: bugfix in kx.serialization?
-                implementation(npm("text-encoding"))
-                implementation(npm("abort-controller"))
-
                 implementation("io.ktor:ktor-client-js:$ktorVersion") //include http&websockets
-                //todo: bugfix in ktor-client?
-                implementation(npm("bufferutil")) //TODO: Uncomment this and stuff breaks. WHY?
-                implementation(npm("utf-8-validate"))
 
                 //ktor client js json
                 implementation("io.ktor:ktor-client-json-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
-                implementation(npm("fs"))
 
-                //React, React DOM + Wrappers (chapter 3)
-                implementation("org.jetbrains:kotlin-react:16.13.0-pre.93-kotlin-1.3.70")
-                implementation("org.jetbrains:kotlin-react-dom:16.13.0-pre.93-kotlin-1.3.70")
-                implementation(npm("react", "16.13.0"))
-                implementation(npm("react-dom", "16.13.0"))
+                implementation("org.jetbrains:kotlin-react:16.13.1-pre.110-kotlin-1.4.0")
+                implementation("org.jetbrains:kotlin-react-dom:16.13.1-pre.110-kotlin-1.4.0")
+                implementation(npm("react", "16.13.1"))
+                implementation(npm("react-dom", "16.13.1"))
             }
         }
     }
@@ -109,6 +90,14 @@ tasks.getByName<Jar>("jvmJar") {
     from(File(webpackTask.destinationDirectory, webpackTask.outputFileName)) // bring output file along into the JAR
 }
 
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+}
+
 distributions {
     main {
         contents {
@@ -120,7 +109,7 @@ distributions {
     }
 }
 
-// Alias "installDist" as "stage" for Heroku
+// Alias "installDist" as "stage" (for cloud providers)
 tasks.create("stage") {
     dependsOn(tasks.getByName("installDist"))
 }
