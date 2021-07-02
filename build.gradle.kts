@@ -1,23 +1,21 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.4.0"
-val serializationVersion = "1.0.0-RC"
-val ktorVersion = "1.4.0"
+val kotlinVersion = "1.5.20"
+val serializationVersion = "1.2.1"
+val ktorVersion = "1.6.1"
 
 plugins {
-    kotlin("multiplatform") version "1.4.0"
+    kotlin("multiplatform") version "1.5.20"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.4.0"
+    kotlin("plugin.serialization") version "1.5.20"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+    maven("https://dl.bintray.com/kotlin/kotlin-eap")
     mavenCentral()
-    jcenter()
-    maven("https://kotlin.bintray.com/kotlin-js-wrappers/") // react, styled, ...
 }
 
 kotlin {
@@ -32,8 +30,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
@@ -50,30 +47,25 @@ kotlin {
                 implementation("io.ktor:ktor-server-core:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:1.2.3")
-                implementation("io.ktor:ktor-websockets:$ktorVersion")
-                implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.1.1")
+                implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.2.7")
             }
         }
 
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:$ktorVersion") //include http&websockets
+                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                implementation("io.ktor:ktor-client-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
-                //ktor client js json
-                implementation("io.ktor:ktor-client-json-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
-
-                implementation("org.jetbrains:kotlin-react:16.13.1-pre.110-kotlin-1.4.0")
-                implementation("org.jetbrains:kotlin-react-dom:16.13.1-pre.110-kotlin-1.4.0")
-                implementation(npm("react", "16.13.1"))
-                implementation(npm("react-dom", "16.13.1"))
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:17.0.2-pre.214-kotlin-1.5.20")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:17.0.2-pre.214-kotlin-1.5.20")
             }
         }
     }
 }
 
 application {
-    mainClassName = "ServerKt"
+    mainClass.set("ServerKt")
 }
 
 // include JS artifacts in any JAR we generate
