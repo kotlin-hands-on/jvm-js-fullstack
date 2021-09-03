@@ -9,7 +9,7 @@ private val scope = MainScope()
 val App = functionalComponent<RProps> { _ ->
     val (shoppingList, setShoppingList) = useState(emptyList<ShoppingListItem>())
 
-    useEffect {
+    useEffect(arrayOf(emptyList<ShoppingListItem>().asDynamic())) {
         scope.launch {
             setShoppingList(getShoppingList())
         }
