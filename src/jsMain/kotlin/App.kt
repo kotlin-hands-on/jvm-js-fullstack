@@ -1,15 +1,14 @@
 import react.*
 import react.dom.*
-import kotlinext.js.*
 import kotlinx.html.js.*
 import kotlinx.coroutines.*
 
 private val scope = MainScope()
 
-val App = functionalComponent<RProps> { _ ->
+val App = fc<Props> {
     val (shoppingList, setShoppingList) = useState(emptyList<ShoppingListItem>())
 
-    useEffect {
+    useEffectOnce {
         scope.launch {
             setShoppingList(getShoppingList())
         }
@@ -32,16 +31,13 @@ val App = functionalComponent<RProps> { _ ->
             }
         }
     }
-    child(
-        InputComponent,
-        props = jsObject {
-            onSubmit = { input ->
-                val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
-                scope.launch {
-                    addShoppingListItem(cartItem)
-                    setShoppingList(getShoppingList())
-                }
+    child(InputComponent) {
+        attrs.onSubmit = { input ->
+            val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
+            scope.launch {
+                addShoppingListItem(cartItem)
+                setShoppingList(getShoppingList())
             }
         }
-    )
+    }
 }
