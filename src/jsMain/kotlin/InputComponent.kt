@@ -9,7 +9,7 @@ external interface InputProps : Props {
     var onSubmit: (String) -> Unit
 }
 
-val InputComponent = fc<InputProps> { props ->
+val inputComponent = fc<InputProps> { props ->
     val (text, setText) = useState("")
 
     val submitHandler: (Event) -> Unit = {
