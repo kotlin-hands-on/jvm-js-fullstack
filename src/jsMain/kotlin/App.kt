@@ -31,7 +31,7 @@ val app = fc<Props> {
             }
         }
     }
-    child(InputComponent) {
+    child(inputComponent) {
         attrs.onSubmit = { input ->
             val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
             scope.launch {
