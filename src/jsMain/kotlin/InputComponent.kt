@@ -5,11 +5,11 @@ import kotlinx.html.InputType
 import org.w3c.dom.events.Event
 import org.w3c.dom.HTMLInputElement
 
-external interface InputProps : RProps {
+external interface InputProps : Props {
     var onSubmit: (String) -> Unit
 }
 
-val InputComponent = functionalComponent<InputProps> { props ->
+val InputComponent = fc<InputProps> { props ->
     val (text, setText) = useState("")
 
     val submitHandler: (Event) -> Unit = {
