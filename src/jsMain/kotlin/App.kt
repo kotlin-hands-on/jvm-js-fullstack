@@ -6,11 +6,11 @@ import kotlinx.coroutines.*
 private val scope = MainScope()
 
 val app = fc<Props> {
-    val (shoppingList, setShoppingList) = useState(emptyList<ShoppingListItem>())
+    var shoppingList by useState(emptyList<ShoppingListItem>())
 
     useEffectOnce {
         scope.launch {
-            setShoppingList(getShoppingList())
+            shoppingList = getShoppingList()
         }
     }
 
@@ -24,7 +24,7 @@ val app = fc<Props> {
                 attrs.onClickFunction = {
                     scope.launch {
                         deleteShoppingListItem(item)
-                        setShoppingList(getShoppingList())
+                        shoppingList = getShoppingList()
                     }
                 }
                 +"[${item.priority}] ${item.desc} "
@@ -36,7 +36,7 @@ val app = fc<Props> {
             val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
             scope.launch {
                 addShoppingListItem(cartItem)
-                setShoppingList(getShoppingList())
+                shoppingList = getShoppingList()
             }
         }
     }
