@@ -1,23 +1,22 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.5.20"
-val serializationVersion = "1.2.1"
-val ktorVersion = "1.6.1"
+val kotlinVersion = "1.5.31"
+val serializationVersion = "1.3.0"
+val ktorVersion = "1.6.5"
 val logbackVersion = "1.2.3"
-val kmongoVersion = "4.2.7"
-val reactWrappersVersion = "17.0.2-pre.214-kotlin-1.5.20"
+val reactVersion = "17.0.2-pre.265-kotlin-1.5.31"
+val kmongoVersion = "4.3.0"
 
 plugins {
-    kotlin("multiplatform") version "1.5.20"
+    kotlin("multiplatform") version "1.5.31"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.5.20"
+    kotlin("plugin.serialization") version "1.5.31"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven("https://dl.bintray.com/kotlin/kotlin-eap")
     mavenCentral()
 }
 
@@ -60,8 +59,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:$reactWrappersVersion")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$reactWrappersVersion")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:$reactVersion")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$reactVersion")
             }
         }
     }
@@ -73,7 +72,9 @@ application {
 
 // include JS artifacts in any JAR we generate
 tasks.getByName<Jar>("jvmJar") {
-    val taskName = if (project.hasProperty("isProduction")) {
+    val taskName = if (project.hasProperty("isProduction")
+        || project.gradle.startParameter.taskNames.contains("installDist")
+    ) {
         "jsBrowserProductionWebpack"
     } else {
         "jsBrowserDevelopmentWebpack"
