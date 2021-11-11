@@ -5,7 +5,7 @@ import kotlinx.coroutines.*
 
 private val scope = MainScope()
 
-val App = fc<Props> {
+val app = fc<Props> {
     val (shoppingList, setShoppingList) = useState(emptyList<ShoppingListItem>())
 
     useEffectOnce {
