@@ -1,11 +1,12 @@
 import react.*
-import react.dom.*
-import kotlinx.html.js.*
 import kotlinx.coroutines.*
+import react.dom.html.ReactHTML.h1
+import react.dom.html.ReactHTML.li
+import react.dom.html.ReactHTML.ul
 
 private val scope = MainScope()
 
-val app = fc<Props> {
+val App = FC<Props> {
     var shoppingList by useState(emptyList<ShoppingListItem>())
 
     useEffectOnce {
@@ -21,7 +22,7 @@ val app = fc<Props> {
         shoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
             li {
                 key = item.toString()
-                attrs.onClickFunction = {
+                onClick = {
                     scope.launch {
                         deleteShoppingListItem(item)
                         shoppingList = getShoppingList()
@@ -31,8 +32,8 @@ val app = fc<Props> {
             }
         }
     }
-    child(inputComponent) {
-        attrs.onSubmit = { input ->
+    InputComponent {
+        onSubmit = { input ->
             val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })
             scope.launch {
                 addShoppingListItem(cartItem)
