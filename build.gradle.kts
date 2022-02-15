@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.5.31"
-val serializationVersion = "1.3.0"
+val kotlinVersion = "1.6.10"
+val serializationVersion = "1.3.2"
 val ktorVersion = "1.6.7"
-val logbackVersion = "1.2.3"
-val reactVersion = "17.0.2-pre.265-kotlin-1.5.31"
-val kmongoVersion = "4.3.0"
+val logbackVersion = "1.2.10"
+val reactVersion = "17.0.2-pre.299-kotlin-1.6.10"
+val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.5.31"
+    kotlin("multiplatform") version "1.6.10"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("plugin.serialization") version "1.6.10"
 }
 
 group = "org.example"
