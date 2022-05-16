@@ -8,7 +8,7 @@ val reactVersion = "17.0.2-pre.299-kotlin-1.6.10"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.6.10"
+    kotlin("multiplatform") version "1.6.21"
     application //to run JVM part
     kotlin("plugin.serialization") version "1.6.10"
 }
