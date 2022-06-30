@@ -20,6 +20,12 @@ repositories {
     mavenCentral()
 }
 
+plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
+    configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+        nodeVersion = "16.15.1"
+    }
+}
+
 kotlin {
     jvm {
         withJava()
