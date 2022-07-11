@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.6.10"
-val serializationVersion = "1.3.2"
-val ktorVersion = "1.6.7"
-val logbackVersion = "1.2.10"
-val reactVersion = "17.0.2-pre.299-kotlin-1.6.10"
+val kotlinVersion = "1.7.10"
+val serializationVersion = "1.3.3"
+val ktorVersion = "2.0.3"
+val logbackVersion = "1.2.11"
+val kotlinWrappersVersion = "1.0.0-pre.354"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.6.10"
+    kotlin("multiplatform") version "1.7.10"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("plugin.serialization") version "1.7.10"
 }
 
 group = "org.example"
@@ -36,6 +36,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
+
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
@@ -46,6 +47,10 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-serialization:$ktorVersion")
+                implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("io.ktor:ktor-server-cors:$ktorVersion")
+                implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-server-core:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
@@ -56,11 +61,11 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-json:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:$reactVersion")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$reactVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation(project.dependencies.enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:$kotlinWrappersVersion"))
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
             }
         }
     }
