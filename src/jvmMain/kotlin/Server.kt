@@ -1,16 +1,18 @@
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.*
 import com.mongodb.ConnectionString
+import io.ktor.server.application.*
+import io.ktor.server.http.content.*
+import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.plugins.cors.routing.*
 import org.litote.kmongo.reactivestreams.KMongo
 
 val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
@@ -28,9 +30,9 @@ fun main() {
             json()
         }
         install(CORS) {
-            method(HttpMethod.Get)
-            method(HttpMethod.Post)
-            method(HttpMethod.Delete)
+            allowMethod(HttpMethod.Get)
+            allowMethod(HttpMethod.Post)
+            allowMethod(HttpMethod.Delete)
             anyHost()
         }
         install(Compression) {
