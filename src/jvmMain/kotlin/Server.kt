@@ -10,6 +10,9 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.css.*
+import kotlinx.css.Color.Companion.transparent
+import kotlinx.css.properties.TextDecoration
 import scraper.Scraper
 
 val collection = mutableListOf(
@@ -46,6 +49,25 @@ fun main() {
             static("/") {
                 resources("")
             }
+            get("/styles.css") {
+                call.respondCss {
+                    body {
+                        backgroundColor = Color.lightGray
+                        margin(0.px)
+                    }
+                    rule("h1.page-title") {
+                        color = Color.white
+                    }
+                    rule("a") {
+                            color=  Color.black
+                            backgroundColor = transparent
+                            textDecoration= TextDecoration.none
+                    }
+                    rule("li"){
+                        padding(5.px)
+                    }
+                }
+            }
             route(ShoppingListItem.path) {
                 get {
                     call.respond(collection.toList())
@@ -64,16 +86,20 @@ fun main() {
                 get { call.respond(scraper.newsList) }
                 post {
                     val filterString = call.receive<String>()
-                    scraper.newsList.add(News(filterString,filterString,filterString))
+                    scraper.newsList.add(News(filterString, filterString, filterString))
                     call.respond(HttpStatusCode.OK)
                 }
-                get("/{filterstring}"){
+                get("/{filterstring}") {
                     call.respond(scraper.filterBy(call.parameters["filterstring"]))
                 }
-                route("/{filterstring}"){
+                route("/{filterstring}") {
 
                 }
             }
         }
     }.start(wait = true)
+}
+
+suspend inline fun ApplicationCall.respondCss(builder: CssBuilder.() -> Unit) {
+    this.respondText(CssBuilder().apply(builder).toString(), ContentType.Text.CSS)
 }

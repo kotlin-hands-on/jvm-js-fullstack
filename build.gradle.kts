@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 val kotlinVersion = "1.7.20-Beta"
 val serializationVersion = "1.3.3"
 val ktorVersion = "2.2.1"
+val kotlin_css_version = "1.0.0-pre.473"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.354"
 val kmongoVersion = "4.5.0"
@@ -59,6 +60,10 @@ kotlin {
                 implementation("org.jsoup:jsoup:1.15.3")
 //                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.0")
 //                implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
+                implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:$kotlin_css_version")
+
+
             }
         }
 
