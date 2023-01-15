@@ -27,3 +27,7 @@ suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
 suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
     jsonClient.delete(ShoppingListItem.path + "/${shoppingListItem.id}")
 }
+
+suspend fun getHeadlines() : List<Headline>{
+    return jsonClient.get(Headline.path).body()
+}

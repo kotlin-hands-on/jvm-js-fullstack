@@ -1,30 +1,26 @@
 import io.ktor.http.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import org.litote.kmongo.*
-import org.litote.kmongo.coroutine.*
-import com.mongodb.ConnectionString
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.plugins.cors.routing.*
-import org.litote.kmongo.reactivestreams.KMongo
 
-val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
-    ConnectionString("$it?retryWrites=false")
-}
-
-val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
-val database = client.getDatabase(connectionString?.database ?: "test")
-val collection = database.getCollection<ShoppingListItem>()
+val collection = mutableListOf(
+    ShoppingListItem("Cucumbers 🥒", 1),
+    ShoppingListItem("Tomatoes 🍅", 2),
+    ShoppingListItem("Orange Juice 🍊", 3)
+)
 
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 9090
+    val scraper = Scraper()
+    scraper.getHeadlines()
     embeddedServer(Netty, port) {
         install(ContentNegotiation) {
             json()
@@ -51,17 +47,20 @@ fun main() {
             }
             route(ShoppingListItem.path) {
                 get {
-                    call.respond(collection.find().toList())
+                    call.respond(collection.toList())
                 }
                 post {
-                    collection.insertOne(call.receive<ShoppingListItem>())
+                    collection.add(call.receive<ShoppingListItem>())
                     call.respond(HttpStatusCode.OK)
                 }
                 delete("/{id}") {
                     val id = call.parameters["id"]?.toInt() ?: error("Invalid delete request")
-                    collection.deleteOne(ShoppingListItem::id eq id)
+                    collection.removeIf { it.id == id }
                     call.respond(HttpStatusCode.OK)
                 }
+            }
+            route(Headline.path) {
+                get { call.respond(scraper.headlineList) }
             }
         }
     }.start(wait = true)
