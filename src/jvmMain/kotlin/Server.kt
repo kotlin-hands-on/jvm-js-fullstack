@@ -10,6 +10,7 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import scraper.Scraper
 
 val collection = mutableListOf(
     ShoppingListItem("Cucumbers 🥒", 1),
@@ -20,7 +21,7 @@ val collection = mutableListOf(
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 9090
     val scraper = Scraper()
-    scraper.getHeadlines()
+    scraper.getNews()
     embeddedServer(Netty, port) {
         install(ContentNegotiation) {
             json()
@@ -59,11 +60,11 @@ fun main() {
                     call.respond(HttpStatusCode.OK)
                 }
             }
-            route(Headline.path) {
-                get { call.respond(scraper.headlineList) }
+            route(News.path) {
+                get { call.respond(scraper.newsList) }
                 post {
                     val filterString = call.receive<String>()
-                    scraper.headlineList.add(Headline(filterString,filterString,filterString))
+                    scraper.newsList.add(News(filterString,filterString,filterString))
                     call.respond(HttpStatusCode.OK)
                 }
                 get("/{filterstring}"){

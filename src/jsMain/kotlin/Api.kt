@@ -26,10 +26,10 @@ suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
     jsonClient.delete(ShoppingListItem.path + "/${shoppingListItem.id}")
 }
 
-suspend fun getHeadlines(): List<Headline> {
-    return jsonClient.get(Headline.path).body()
+suspend fun getNews(): List<News> {
+    return jsonClient.get(News.path).body()
 }
 
-suspend fun filterResults(filterText: String): List<Headline> {
-    return jsonClient.get(Headline.path + "/${filterText}").body()
+suspend fun filterResults(filterText: String): List<News> {
+    return jsonClient.get(News.path + "/${filterText}").body()
 }
