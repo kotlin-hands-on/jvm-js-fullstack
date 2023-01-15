@@ -7,11 +7,12 @@ import org.jsoup.nodes.Element
 class Scraper {
     val newsList = mutableListOf<News>()
    fun getNews(): List<News> {
-       getNews(newsList) //Brauch doch ne Klasse?
+       Sueddeutsche.getNews(newsList)
+       TableMedia.getNews(newsList)
        return newsList
    }
 
     fun filterBy(s: String?): List<News> {
-        return if (s == null) newsList else newsList.filter { it.title.contains(s, true) }
+        return if (s == null) newsList else newsList.filter { it.contains(s) }
     }
 }

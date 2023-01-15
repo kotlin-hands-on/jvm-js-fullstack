@@ -1,7 +1,20 @@
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class News(val title: String, val url: String, val provider: String = "", val overline: String = "", val teaser: String = "", val text: String = "") {
+data class News(
+    val title: String,
+    val url: String,
+    val provider: String = "",
+    val overline: String = "",
+    val teaser: String = "",
+    val text: String = "",
+    val breadcrumbs: List<String> = emptyList(),
+    val author: String = ""
+) {
+    fun contains(searchText: String): Boolean {
+        return this.toString().contains(searchText)
+    }
+
     val id: Int = hashCode()
 
     companion object {
