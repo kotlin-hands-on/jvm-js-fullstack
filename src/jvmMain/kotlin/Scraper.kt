@@ -20,8 +20,8 @@ class Scraper {
             return
         }
         println("found section presseschau")
-        val div = divs[0]
-        val childNodes = div.childNodes()
+        val element = divs[0]
+        val childNodes = element.childNodes()
         for (i in 0..childNodes.size - 1 step 3) {
             val text = childNodes[i]
             try {
@@ -39,5 +39,9 @@ class Scraper {
         val provider = anchor.text()
         val headline = Headline(text.trim(), url, provider)
         headlineList.add(headline)
+    }
+
+    fun filterBy(s: String?): List<Headline> {
+       return  if (s==null) headlineList else headlineList.filter { it.text.contains(s, true) }
     }
 }

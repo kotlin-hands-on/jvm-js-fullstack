@@ -61,6 +61,17 @@ fun main() {
             }
             route(Headline.path) {
                 get { call.respond(scraper.headlineList) }
+                post {
+                    val filterString = call.receive<String>()
+                    scraper.headlineList.add(Headline(filterString,filterString,filterString))
+                    call.respond(HttpStatusCode.OK)
+                }
+                get("/{filterstring}"){
+                    call.respond(scraper.filterBy(call.parameters["filterstring"]))
+                }
+                route("/{filterstring}"){
+
+                }
             }
         }
     }.start(wait = true)
