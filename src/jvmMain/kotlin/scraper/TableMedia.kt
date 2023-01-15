@@ -18,7 +18,7 @@ class TableMedia {
                 divs.forEach { parseToHeadline(it, newsList) }
                 println("Unexpected number of child div tags: ${divs.size}")
                 return
-            } else if (divs.size < 1) {
+            } else if (divs.isEmpty()) {
                 System.err.println("No div tag in here")
                 return
             }

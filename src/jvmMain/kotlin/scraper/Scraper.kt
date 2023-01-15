@@ -1,13 +1,12 @@
 package scraper
 
 import News
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 
 class Scraper {
     val newsList = mutableListOf<News>()
    fun getNews(): List<News> {
        Sueddeutsche.getNews(newsList)
+       Faz.getNews(newsList)
        TableMedia.getNews(newsList)
        return newsList
    }

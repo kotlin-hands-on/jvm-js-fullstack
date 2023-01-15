@@ -4,10 +4,10 @@ import News
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Sueddeutsche {
+class Faz {
     companion object {
-        const val htmlClass = "entrylist__content"
-        const val url = "https://www.sueddeutsche.de/news"
+        const val htmlClass = "ticker-news-item"
+        const val url = "https://www.faz.net/faz-live"
 
         fun getNews(newsList: MutableList<News>) {
             println("Scraping: $url")
@@ -23,27 +23,24 @@ class Sueddeutsche {
                 println("Unexpected number of tags: ${newsContainer.size}")
                 return
             } else if (newsContainer.isEmpty()) {
-                System.err.println("No tag with class:$htmlClass in here")
+                System.err.println("No tag with class:${Sueddeutsche.htmlClass} in here")
                 return
             }
             println("found $htmlClass")
 
             val newsEntry = newsContainer.first()
-            val url = newsEntry?.getElementsByClass("entrylist__link")?.first()?.attr("href") ?: ""
-            val overline = newsEntry?.getElementsByClass("entrylist__overline")?.first()?.text() ?: ""
-            val title = newsEntry?.getElementsByClass("entrylist__title")?.first()?.text() ?: ""
-            val author = newsEntry?.getElementsByClass("entrylist__author")?.first()?.text() ?: ""
-            val teaser = newsEntry?.getElementsByClass("entrylist__detail")?.first()?.wholeOwnText() ?: ""
-            val breadcrumbs = newsEntry?.getElementsByClass("breadcrumb-list__item")?.map { it.text() } ?: emptyList()
+            val titleAndLink = newsEntry?.getElementsByClass("ticker-news-title")?.first()?.getElementsByTag("a")?.first()
+            val url = titleAndLink?.attr("href") ?: ""
+            val overline = newsEntry?.getElementsByClass("ticker-news-super")?.first()?.wholeOwnText() ?: ""
+            val title = titleAndLink?.wholeOwnText() ?: ""
+            val author = newsEntry?.getElementsByClass("ticker-news-author")?.first()?.wholeOwnText() ?: ""
 
             newsList.add(
                 News(
                     title = title,
                     url = url,
-                    provider = "Süddeutsche",
+                    provider = "FAZ",
                     overline = overline,
-                    teaser = teaser,
-                    breadcrumbs = breadcrumbs,
                     author = author
                 )
             )
