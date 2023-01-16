@@ -6,8 +6,8 @@ import org.jsoup.nodes.Element
 
 class Faz {
     companion object {
-        const val htmlClass = "ticker-news-item"
-        const val url = "https://www.faz.net/faz-live"
+        private const val htmlClass = "ticker-news-item"
+        private const val url = "https://www.faz.net/faz-live"
 
         fun getNews(newsList: MutableList<News>) {
             println("Scraping: $url")
@@ -23,7 +23,7 @@ class Faz {
                 println("Unexpected number of tags: ${newsContainer.size}")
                 return
             } else if (newsContainer.isEmpty()) {
-                System.err.println("No tag with class:${Sueddeutsche.htmlClass} in here")
+                System.err.println("No tag with class:$htmlClass in here")
                 return
             }
             println("found $htmlClass")

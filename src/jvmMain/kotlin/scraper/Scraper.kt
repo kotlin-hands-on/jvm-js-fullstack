@@ -4,12 +4,16 @@ import News
 
 class Scraper {
     val newsList = mutableListOf<News>()
-   fun getNews(): List<News> {
-       Sueddeutsche.getNews(newsList)
-       Faz.getNews(newsList)
-       TableMedia.getNews(newsList)
-       return newsList
-   }
+    fun getNews(): List<News> {
+        Sueddeutsche.getNews(newsList)
+        Faz.getNews(newsList)
+        Tagesschau.getNews(newsList)
+        Zdf.getNews(newsList)
+        Spiegel.getNews(newsList)
+        Tonline.getNews(newsList)
+        TableMedia.getNews(newsList)
+        return newsList
+    }
 
     fun filterBy(s: String?): List<News> {
         return if (s == null) newsList else newsList.filter { it.contains(s) }

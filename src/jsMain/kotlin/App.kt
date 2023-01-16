@@ -55,6 +55,9 @@ val App = FC<Props> { props ->
                         div {
                             +item.teaser
                         }
+                        div {
+                            +item.text
+                        }
                     }
                 }
             }

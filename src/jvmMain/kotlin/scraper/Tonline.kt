@@ -4,10 +4,10 @@ import News
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Sueddeutsche {
+class Tonline {
     companion object {
-        private const val htmlClass = "entrylist__content"
-        private const val url = "https://www.sueddeutsche.de/news"
+        private const val htmlClass = "einr7x61"
+        private const val url = "https://www.t-online.de/schlagzeilen/"
 
         fun getNews(newsList: MutableList<News>) {
             println("Scraping: $url")
@@ -29,22 +29,17 @@ class Sueddeutsche {
             println("found $htmlClass")
 
             val newsEntry = newsContainer.first()
-            val url = newsEntry?.getElementsByClass("entrylist__link")?.first()?.attr("href") ?: ""
-            val overline = newsEntry?.getElementsByClass("entrylist__overline")?.first()?.text() ?: ""
-            val title = newsEntry?.getElementsByClass("entrylist__title")?.first()?.text() ?: ""
-            val author = newsEntry?.getElementsByClass("entrylist__author")?.first()?.text() ?: ""
-            val teaser = newsEntry?.getElementsByClass("entrylist__detail")?.first()?.wholeOwnText() ?: ""
-            val breadcrumbs = newsEntry?.getElementsByClass("breadcrumb-list__item")?.map { it.text() } ?: emptyList()
+            val titleAndLink = newsEntry?.getElementsByTag("a")?.first()
+            val url = titleAndLink?.attr("href") ?: ""
+            val title = titleAndLink?.wholeOwnText() ?: ""
+            val overline = newsEntry?.getElementsByClass("css-169b1y4")?.first()?.text() ?: ""
 
             newsList.add(
                 News(
                     title = title,
                     url = url,
-                    provider = "Süddeutsche",
-                    overline = overline,
-                    teaser = teaser,
-                    breadcrumbs = breadcrumbs,
-                    author = author
+                    provider = "T-Online",
+                    overline = overline
                 )
             )
         }

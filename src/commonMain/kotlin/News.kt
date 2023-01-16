@@ -12,7 +12,8 @@ data class News(
     val author: String = ""
 ) {
     fun contains(searchText: String): Boolean {
-        return this.toString().contains(searchText)
+        //TODO improve toString method
+        return this.toString().contains(searchText, true)
     }
 
     val id: Int = hashCode()
