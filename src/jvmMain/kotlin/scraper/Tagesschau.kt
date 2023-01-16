@@ -25,12 +25,16 @@ class Tagesschau {
             val anchor = li.getElementsByTag("a")
             val url = anchor.attr("href")
             val title = anchor.text()
+            val time = anchor.parents()[0].wholeOwnText() ?: ""
+            val date = anchor.parents()[3].firstElementChild()?.wholeOwnText() ?: ""
+
 
             newsList.add(
                 News(
                     title = title,
                     url = "$baseUrl$url",
                     provider = "Tagesschau",
+                    date = time + date
                 )
             )
         }

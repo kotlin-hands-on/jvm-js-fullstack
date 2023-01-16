@@ -34,6 +34,7 @@ class Faz {
             val overline = newsEntry?.getElementsByClass("ticker-news-super")?.first()?.wholeOwnText() ?: ""
             val title = titleAndLink?.wholeOwnText() ?: ""
             val author = newsEntry?.getElementsByClass("ticker-news-author")?.first()?.wholeOwnText() ?: ""
+            val date = newsEntry?.getElementsByClass("ticker-news-time")?.first()?.wholeOwnText() ?: ""
 
             newsList.add(
                 News(
@@ -41,7 +42,8 @@ class Faz {
                     url = url,
                     provider = "FAZ",
                     overline = overline,
-                    author = author
+                    author = author,
+                    date = date
                 )
             )
         }

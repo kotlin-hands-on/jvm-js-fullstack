@@ -7,7 +7,8 @@ import org.jsoup.nodes.Element
 class Tonline {
     companion object {
         private const val htmlClass = "einr7x61"
-        private const val url = "https://www.t-online.de/schlagzeilen/"
+        private const val baseUrl = "https://www.t-online.de"
+        private const val url = "$baseUrl/schlagzeilen/"
 
         fun getNews(newsList: MutableList<News>) {
             println("Scraping: $url")
@@ -27,19 +28,19 @@ class Tonline {
                 return
             }
             println("found $htmlClass")
-
             val newsEntry = newsContainer.first()
             val titleAndLink = newsEntry?.getElementsByTag("a")?.first()
             val url = titleAndLink?.attr("href") ?: ""
             val title = titleAndLink?.wholeOwnText() ?: ""
             val overline = newsEntry?.getElementsByClass("css-169b1y4")?.first()?.text() ?: ""
-
+            val date = div.parent()?.parent()?.parent()?.attr("data-tb-region") ?: ""
             newsList.add(
                 News(
                     title = title,
-                    url = url,
+                    url = "$baseUrl$url",
                     provider = "T-Online",
-                    overline = overline
+                    overline = overline,
+                    date = date
                 )
             )
         }

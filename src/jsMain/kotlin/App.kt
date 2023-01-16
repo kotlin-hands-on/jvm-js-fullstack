@@ -1,5 +1,7 @@
+import csstype.ClassName
 import kotlinx.coroutines.*
 import react.*
+import react.dom.html.AnchorTarget
 import react.dom.html.ReactHTML.a
 import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.div
@@ -19,19 +21,19 @@ val App = FC<Props> { props ->
             news = getNews()
         }
     }
-
-    h1 {
-        +"Sören's fast Scraper"
-    }
-
-    InputComponent {
-        onSubmit = { input ->
-            scope.launch {
-                news = if (input.isEmpty()) getNews() else filterResults(input)
+    div {
+        className = ClassName("page_title")
+        h1 {
+            +"Sören's fast Scraper"
+        }
+        InputComponent {
+            onSubmit = { input ->
+                scope.launch {
+                    news = if (input.isEmpty()) getNews() else filterResults(input)
+                }
             }
         }
     }
-
     div {
         id = "headLineListContainer"
         ol {
@@ -40,13 +42,16 @@ val App = FC<Props> { props ->
                 li {
                     a {
                         href = item.url
+                        target = AnchorTarget._blank
+                        div {
+                            +item.date
+                        }
                         div {
                             +item.provider
                         }
                         div {
                             strong { +item.overline }
                         }
-
                         div {
                             em {
                                 +item.title

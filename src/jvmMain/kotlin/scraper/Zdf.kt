@@ -34,14 +34,15 @@ class Zdf {
             val overline = newsEntry?.getElementsByClass("teaser-cat-category")?.first()?.text() ?: ""
             val title = newsEntry?.getElementsByClass("normal-space")?.first()?.wholeOwnText() ?: ""
             val text = newsEntry?.getElementsByClass("panel-content")?.first()?.wholeOwnText() ?: ""
+            val date = newsEntry?.getElementsByClass("teaser-time")?.first()?.wholeOwnText() ?: ""
 
             newsList.add(
                 News(
                     title = title,
-                    url = url,
                     provider = "ZDF",
                     overline = overline,
-                    text = text
+                    text = text,
+                    date = date
                 )
             )
         }

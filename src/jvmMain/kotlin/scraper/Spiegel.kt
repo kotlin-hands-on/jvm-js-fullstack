@@ -27,15 +27,18 @@ class Spiegel {
             }
             println("found anchor tag")
 
+            val date = div.getElementsByClass("items-end").first()?.firstElementChild()?.wholeOwnText() ?: ""
             val url = anchor.attr("href")
             val title = anchor.attr("title")
             //TODO val author = they are there
+
 
             newsList.add(
                 News(
                     title = title,
                     url = url,
-                    provider = "Spiegel"
+                    provider = "Spiegel",
+                    date = date
                 )
             )
         }

@@ -53,17 +53,19 @@ fun main() {
                 call.respondCss {
                     body {
                         backgroundColor = Color.lightGray
-                        margin(0.px)
+                        margin(10.px)
                     }
-                    rule("h1.page-title") {
-                        color = Color.white
+                    rule(".page_title") {
+                        color = Color.gray
+                        margin(all = LinearDimension.auto)
+                        width = LinearDimension("50%")
                     }
                     rule("a") {
-                            color=  Color.black
-                            backgroundColor = transparent
-                            textDecoration= TextDecoration.none
+                        color = Color.black
+                        backgroundColor = transparent
+                        textDecoration = TextDecoration.none
                     }
-                    rule("li"){
+                    rule("li") {
                         padding(5.px)
                     }
                 }

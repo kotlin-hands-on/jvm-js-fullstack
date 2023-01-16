@@ -6,7 +6,7 @@ import org.jsoup.nodes.Element
 
 class Sueddeutsche {
     companion object {
-        private const val htmlClass = "entrylist__content"
+        private const val htmlClass = "entrylist__entry"
         private const val url = "https://www.sueddeutsche.de/news"
 
         fun getNews(newsList: MutableList<News>) {
@@ -34,6 +34,7 @@ class Sueddeutsche {
             val title = newsEntry?.getElementsByClass("entrylist__title")?.first()?.text() ?: ""
             val author = newsEntry?.getElementsByClass("entrylist__author")?.first()?.text() ?: ""
             val teaser = newsEntry?.getElementsByClass("entrylist__detail")?.first()?.wholeOwnText() ?: ""
+            val date = newsEntry?.getElementsByClass("entrylist__time")?.first()?.wholeOwnText() ?: ""
             val breadcrumbs = newsEntry?.getElementsByClass("breadcrumb-list__item")?.map { it.text() } ?: emptyList()
 
             newsList.add(
@@ -44,7 +45,8 @@ class Sueddeutsche {
                     overline = overline,
                     teaser = teaser,
                     breadcrumbs = breadcrumbs,
-                    author = author
+                    author = author,
+                    date = date
                 )
             )
         }
