@@ -30,6 +30,7 @@ fun main() {
             json()
         }
         install(CORS) {
+            allowHeader(HttpHeaders.ContentType)
             allowMethod(HttpMethod.Get)
             allowMethod(HttpMethod.Post)
             allowMethod(HttpMethod.Delete)
