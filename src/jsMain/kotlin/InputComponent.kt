@@ -1,9 +1,9 @@
-import org.w3c.dom.HTMLFormElement
+import web.html.HTMLFormElement
 import react.*
-import org.w3c.dom.HTMLInputElement
+import web.html.HTMLInputElement
 import react.dom.events.ChangeEventHandler
 import react.dom.events.FormEventHandler
-import react.dom.html.InputType
+import web.html.InputType
 import react.dom.html.ReactHTML.form
 import react.dom.html.ReactHTML.input
 
