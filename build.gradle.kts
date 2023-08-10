@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.8.21"
+val kotlinVersion = "1.9.0"
 val serializationVersion = "1.5.1"
 val ktorVersion = "2.3.0"
 val logbackVersion = "1.2.11"
@@ -8,9 +8,9 @@ val kotlinWrappersVersion = "1.0.0-pre.561"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.8.21"
+    kotlin("multiplatform") version "1.9.0"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.example"
@@ -75,7 +75,7 @@ application {
     mainClass.set("ServerKt")
 }
 
-// include JS artifacts in any JAR we generate
+// include JS artifacts in any generated JAR
 tasks.named<Jar>("jvmJar").configure {
     val taskName = if (project.hasProperty("isProduction")
         || project.gradle.startParameter.taskNames.contains("installDist")
@@ -85,7 +85,12 @@ tasks.named<Jar>("jvmJar").configure {
         "jsBrowserDevelopmentWebpack"
     }
     val webpackTask = tasks.named<KotlinWebpack>(taskName)
-    from(webpackTask.map { File(it.destinationDirectory, it.outputFileName) }) // bring output file along into the JAR
+    from(webpackTask.map {
+        it.outputDirectory
+        it.mainOutputFileName
+        into("static")
+    }
+    )
 }
 
 tasks {
