@@ -1,16 +1,17 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.distsDirectory
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.8.21"
-val serializationVersion = "1.5.1"
-val ktorVersion = "2.3.0"
+val kotlinVersion = "1.9.10"
+val serializationVersion = "1.6.0"
+val ktorVersion = "2.3.3"
 val logbackVersion = "1.2.11"
-val kotlinWrappersVersion = "1.0.0-pre.561"
+val kotlinWrappersVersion = "1.0.0-pre.621"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.8.21"
+    kotlin("multiplatform") version "1.9.10"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 group = "org.example"
@@ -85,7 +86,9 @@ tasks.named<Jar>("jvmJar").configure {
         "jsBrowserDevelopmentWebpack"
     }
     val webpackTask = tasks.named<KotlinWebpack>(taskName)
-    from(webpackTask.map { File(it.destinationDirectory, it.outputFileName) }) // bring output file along into the JAR
+    dependsOn(webpackTask)
+    from(webpackTask.map { it.mainOutputFile.get().asFile }) // bring output file along into the JAR
+    into("static")
 }
 
 tasks {
