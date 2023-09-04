@@ -41,12 +41,6 @@ fun main() {
         }
 
         routing {
-            get("/") {
-                call.respondText(
-                    this::class.java.classLoader.getResource("index.html")!!.readText(),
-                    ContentType.Text.Html
-                )
-            }
             staticResources("/", "static")
             route(ShoppingListItem.path) {
                 get {
