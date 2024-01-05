@@ -100,12 +100,13 @@ compose.experimental {
 
 // include JS artifacts in any JAR we generate
 tasks.named<Jar>("jvmJar").configure {
+    val taskPrefix = if (project.properties.get("app.run.wasm") == "true") "wasmJs" else "js"
     val taskName = if (project.hasProperty("isProduction")
         || project.gradle.startParameter.taskNames.contains("installDist")
     ) {
-        "wasmJsBrowserProductionWebpack"
+        "${taskPrefix}BrowserProductionWebpack"
     } else {
-        "wasmJsBrowserDevelopmentWebpack"
+        "${taskPrefix}BrowserDevelopmentWebpack"
     }
     val webpackTask = tasks.named<KotlinWebpack>(taskName)
     dependsOn(webpackTask)
