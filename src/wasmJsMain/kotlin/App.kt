@@ -11,10 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,38 +45,38 @@ fun ShoppingList(viewModel: ShoppingListViewModel) {
 }
 
 @Composable
-fun Input(onCreateItem: (ShoppingListItem) -> Unit) = Column {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val input = remember { mutableStateOf(TextFieldValue()) }
-
-        fun createShoppingItem() {
-            val text = input.value.text
-            if (text.isBlank()) return
-            onCreateItem(ShoppingListItem(text.replace("!", ""), text.count { it == '!' }))
-            input.value = input.value.copy(text = "")
-        }
-
-        OutlinedTextField(
-            value = input.value,
-            singleLine = true,
-            onValueChange = { input.value = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { createShoppingItem() }),
-            modifier = Modifier.weight(1f).padding(8.dp),
-        )
-        OutlinedButton(
-            onClick = { createShoppingItem() },
-            modifier = Modifier.padding(8.dp)
+fun Input(onCreateItem: (ShoppingListItem) -> Unit) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Create")
+            var input by remember { mutableStateOf(TextFieldValue()) }
+
+            fun createShoppingItem() {
+                val text = input.text.trim()
+                if (text.isBlank()) return
+                onCreateItem(ShoppingListItem(text.replace("!", ""), text.count { it == '!' }))
+                input = input.copy(text = "")
+            }
+
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                onValueChange = { input = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { createShoppingItem() }),
+                modifier = Modifier.weight(1f).padding(8.dp),
+            )
+            OutlinedButton(
+                onClick = { createShoppingItem() },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text("Create")
+            }
         }
+        Divider()
     }
-    Divider()
 }
 
 @Composable
