@@ -15,15 +15,13 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.cors.routing.*
 import org.litote.kmongo.reactivestreams.KMongo
 
-//val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
-//    ConnectionString("$it?retryWrites=false")
-//}
+val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
+    ConnectionString("$it?retryWrites=false")
+}
 
-//val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
-//val database = client.getDatabase(connectionString?.database ?: "shoppingList")
-//val collection = database.getCollection<ShoppingListItem>()
-
-val collection = mutableListOf<ShoppingListItem>();
+val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
+val database = client.getDatabase(connectionString?.database ?: "shoppingList")
+val collection = database.getCollection<ShoppingListItem>()
 
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 9090
@@ -46,15 +44,15 @@ fun main() {
             staticResources("/", "static")
             route(ShoppingListItem.path) {
                 get {
-                    call.respond(collection)
+                    call.respond(collection.find().toList())
                 }
                 post {
-                    collection.add(call.receive<ShoppingListItem>())
+                    collection.insertOne(call.receive<ShoppingListItem>())
                     call.respond(HttpStatusCode.OK)
                 }
                 delete("/{id}") {
                     val id = call.parameters["id"]?.toInt() ?: error("Invalid delete request")
-                    collection.removeIf { it.id == id }
+                    collection.deleteOne(ShoppingListItem::id eq id)
                     call.respond(HttpStatusCode.OK)
                 }
             }
