@@ -5,8 +5,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 
-import kotlinx.browser.window
-
 val jsonClient = HttpClient {
     install(ContentNegotiation) {
         json()
