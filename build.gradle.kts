@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 val serializationVersion = "1.6.2"
-val ktorVersion = "2.3.3"
+val ktorVersion = "3.0.0-wasm2"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.621"
 val kmongoVersion = "4.5.0"
@@ -19,6 +19,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
 }
 
 kotlin {
@@ -38,6 +39,10 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(compose.runtime)
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
             }
         }
@@ -51,7 +56,6 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -66,10 +70,7 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation(project.dependencies.enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:$kotlinWrappersVersion"))
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
@@ -78,7 +79,6 @@ kotlin {
 
         val wasmJsMain by getting {
             dependencies {
-                implementation(compose.runtime)
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)

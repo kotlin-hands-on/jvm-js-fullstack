@@ -33,12 +33,12 @@ fun ShoppingList(viewModel: ShoppingListViewModel) {
     ShoppingListTheme {
         Surface {
             Column(Modifier.fillMaxSize()) {
-                Input(onCreateItem = viewModel::addShoppingListItem)
+                Input(onCreateItem = viewModel::pushShoppingListItem)
                 LazyColumn {
                     items(shoppingList.size) { index ->
                         ShoppingItem(
                             shoppingListItem = shoppingList[index],
-                            onDeleteClick = viewModel::deleteShoppingListItem
+                            onDeleteClick = viewModel::removeShoppingListItem
                         )
                     }
                 }
@@ -66,12 +66,11 @@ fun Input(onCreateItem: (ShoppingListItem) -> Unit) = Column {
 
         OutlinedTextField(
             value = input.value,
+            singleLine = true,
             onValueChange = { input.value = it },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { createShoppingItem() }),
-            modifier = Modifier
-                .weight(1f)
-                .padding(8.dp),
+            modifier = Modifier.weight(1f).padding(8.dp),
         )
         OutlinedButton(
             onClick = { createShoppingItem() },
@@ -88,7 +87,7 @@ fun ShoppingItem(shoppingListItem: ShoppingListItem, onDeleteClick: (ShoppingLis
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text("[${shoppingListItem.priority}] ${shoppingListItem.desc}", Modifier.weight(1f))

@@ -7,27 +7,25 @@ import kotlinx.coroutines.promise
 
 @OptIn(DelicateCoroutinesApi::class)
 class ShoppingListViewModel {
-    private val jsonClient = HttpClient()
-
     var shoppingList by mutableStateOf(listOf<ShoppingListItem>())
         private set
 
     fun fetchShoppingList() {
         GlobalScope.promise {
-            shoppingList = jsonClient.get(ShoppingListItem.path)
+            shoppingList = getShoppingList()
         }
     }
 
-    fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
+    fun pushShoppingListItem(shoppingListItem: ShoppingListItem) {
         GlobalScope.promise {
-            jsonClient.post(ShoppingListItem.path, shoppingListItem)
+            addShoppingListItem(shoppingListItem)
             shoppingList += shoppingListItem
         }
     }
 
-    fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
+    fun removeShoppingListItem(shoppingListItem: ShoppingListItem) {
         GlobalScope.promise {
-            jsonClient.delete(ShoppingListItem.path + "/${shoppingListItem.id}")
+            deleteShoppingListItem(shoppingListItem)
             shoppingList -= shoppingListItem
         }
     }
