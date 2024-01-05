@@ -1,16 +1,15 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.9.10"
-val serializationVersion = "1.6.0"
-val ktorVersion = "2.3.3"
+val serializationVersion = "1.6.2"
+val ktorVersion = "3.0.0-wasm2"
 val logbackVersion = "1.2.11"
-val kotlinWrappersVersion = "1.0.0-pre.621"
+val kotlinWrappersVersion = "1.0.0-pre.561"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.9.10"
+    kotlin("multiplatform") version "1.9.21"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.21"
 }
 
 group = "org.example"
@@ -18,6 +17,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
 }
 
 kotlin {
@@ -29,6 +29,12 @@ kotlin {
             binaries.executable()
         }
     }
+    wasmJs {
+        browser {
+            binaries.executable()
+        }
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -68,6 +74,8 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
             }
         }
+
+        val wasmJsMain by getting
     }
 }
 
