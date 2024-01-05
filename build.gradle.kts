@@ -84,6 +84,7 @@ kotlin {
                 implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
             }
         }
     }
@@ -102,9 +103,9 @@ tasks.named<Jar>("jvmJar").configure {
     val taskName = if (project.hasProperty("isProduction")
         || project.gradle.startParameter.taskNames.contains("installDist")
     ) {
-        "jsBrowserProductionWebpack"
+        "wasmJsBrowserProductionWebpack"
     } else {
-        "jsBrowserDevelopmentWebpack"
+        "wasmJsBrowserDevelopmentWebpack"
     }
     val webpackTask = tasks.named<KotlinWebpack>(taskName)
     dependsOn(webpackTask)
