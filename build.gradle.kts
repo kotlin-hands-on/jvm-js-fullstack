@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.9.10"
-val serializationVersion = "1.6.0"
+val serializationVersion = "1.6.2"
 val ktorVersion = "2.3.3"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.621"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.9.10"
+    kotlin("multiplatform") version "1.9.21"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.21"
+    id("org.jetbrains.compose") version "1.6.0-alpha01"
 }
 
 group = "org.example"
@@ -18,6 +18,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 kotlin {
@@ -29,11 +30,15 @@ kotlin {
             binaries.executable()
         }
     }
+    wasmJs {
+        browser {
+            binaries.executable()
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
 
@@ -46,6 +51,7 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -60,6 +66,7 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -68,11 +75,26 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
             }
         }
+
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.ui)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
+            }
+        }
     }
 }
 
 application {
     mainClass.set("ServerKt")
+}
+
+compose.experimental {
+    web.application {}
 }
 
 // include JS artifacts in any JAR we generate
@@ -86,8 +108,9 @@ tasks.named<Jar>("jvmJar").configure {
     }
     val webpackTask = tasks.named<KotlinWebpack>(taskName)
     dependsOn(webpackTask)
-    from(webpackTask.map { it.mainOutputFile.get().asFile }) // bring output file along into the JAR
+    from(webpackTask.map { it.outputDirectory }) // bring output file along into the JAR
     into("static")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks {
