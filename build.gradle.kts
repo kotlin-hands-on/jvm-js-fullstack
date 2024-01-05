@@ -8,9 +8,9 @@ val kotlinWrappersVersion = "1.0.0-pre.621"
 val kmongoVersion = "4.5.0"
 
 plugins {
-    kotlin("multiplatform") version "1.9.10"
+    kotlin("multiplatform") version "1.9.22"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 group = "org.example"
@@ -29,6 +29,12 @@ kotlin {
             binaries.executable()
         }
     }
+    wasmJs {
+        browser {
+            binaries.executable()
+        }
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -68,6 +74,8 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
             }
         }
+
+        val wasmJsMain by getting
     }
 }
 
