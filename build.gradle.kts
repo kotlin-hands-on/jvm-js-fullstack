@@ -32,7 +32,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.ktor.client.core)
                 implementation(libs.ktor.serialization.json)
                 implementation(libs.kotlinx.serialization.json)
             }
@@ -59,8 +58,7 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
-                implementation(libs.ktor.client.contentNegotiation)
-//                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                implementation(libs.ktor.client.core)
                 implementation(kotlinWrappers.react)
                 implementation(kotlinWrappers.reactDom)
                 implementation(libs.ktor.client.contentNegotiation)

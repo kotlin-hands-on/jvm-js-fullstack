@@ -5,25 +5,23 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 
-import kotlinx.browser.window
-
-val jsonClient = HttpClient {
+val client = HttpClient {
     install(ContentNegotiation) {
         json()
     }
 }
 
 suspend fun getShoppingList(): List<ShoppingListItem> {
-    return jsonClient.get(ShoppingListItem.path).body()
+    return client.get(ShoppingListItem.PATH).body()
 }
 
 suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
-    jsonClient.post(ShoppingListItem.path) {
+    client.post(ShoppingListItem.PATH) {
         contentType(ContentType.Application.Json)
         setBody(shoppingListItem)
   }
 }
 
 suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
-    jsonClient.delete(ShoppingListItem.path + "/${shoppingListItem.id}")
+    client.delete(ShoppingListItem.PATH + "/${shoppingListItem.id}")
 }

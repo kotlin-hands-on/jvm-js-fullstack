@@ -42,7 +42,7 @@ fun main() {
 
         routing {
             staticResources("/", "static")
-            route(ShoppingListItem.path) {
+            route(ShoppingListItem.PATH) {
                 get {
                     call.respond(collection.find().toList())
                 }
