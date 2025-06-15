@@ -1,71 +1,57 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.9.10"
-val serializationVersion = "1.6.0"
-val ktorVersion = "2.3.3"
-val logbackVersion = "1.2.11"
-val kotlinWrappersVersion = "1.0.0-pre.621"
-val kmongoVersion = "4.5.0"
-
 plugins {
-    kotlin("multiplatform") version "1.9.10"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.9.10"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
 
 kotlin {
     jvm {
         withJava()
     }
     js {
-        browser {
-            binaries.executable()
-        }
+        binaries.executable()
+        browser()
     }
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.serialization.json)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(libs.kotlin.test)
             }
         }
 
         val jvmMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-serialization:$ktorVersion")
-                implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("io.ktor:ktor-server-cors:$ktorVersion")
-                implementation("io.ktor:ktor-server-compression:$ktorVersion")
-                implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-server-netty:$ktorVersion")
-                implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+                implementation(libs.kmongo)
+                implementation(libs.logback)
+                implementation(libs.ktor.serialization)
+                implementation(libs.ktor.server.cors)
+                implementation(libs.ktor.server.netty)
+                implementation(libs.ktor.server.compression)
+                implementation(libs.ktor.server.core.jvm)
+                implementation(libs.ktor.server.contentNegotiation)
             }
         }
 
         val jsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation(project.dependencies.enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:$kotlinWrappersVersion"))
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
+                implementation(libs.ktor.client.contentNegotiation)
+//                implementation("io.ktor:ktor-client-js:$ktorVersion")
+                implementation(kotlinWrappers.react)
+                implementation(kotlinWrappers.reactDom)
+                implementation(libs.ktor.client.contentNegotiation)
             }
         }
     }
@@ -101,7 +87,7 @@ tasks {
 distributions {
     main {
         contents {
-            from("$buildDir/libs") {
+            from("${layout.buildDirectory.get()}/libs") {
                 rename("${rootProject.name}-jvm", rootProject.name)
                 into("lib")
             }
